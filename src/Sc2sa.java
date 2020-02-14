@@ -82,10 +82,11 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseALdecfoncProgramme(ALdecfoncProgramme node)
     {
+        SaLDec variables = null;
         SaLDec fonctions = null;
         node.getListedecfonc().apply(this);
         fonctions = (SaLDec) this.returnValue;
-        this.returnValue = new SaProg(fonctions);
+        this.returnValue = new SaProg(variables, fonctions);
     }
 
     public void inAOptdecvar(AOptdecvar node)
