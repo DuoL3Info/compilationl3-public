@@ -1244,7 +1244,8 @@ public class Sc2sa extends DepthFirstAdapter {
         SaExp op1 = null;
         node.getExp6().apply(this);
         op1 = (SaExp) this.returnValue;
-        this.returnValue = op1;    }
+        this.returnValue = op1;
+    }
 
     public void inANombreExp6(ANombreExp6 node)
     {
@@ -1259,12 +1260,11 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseANombreExp6(ANombreExp6 node)
     {
-        inANombreExp6(node);
-        if(node.getNombre() != null)
-        {
-            node.getNombre().apply(this);
-        }
-        outANombreExp6(node);
+        SaExpInt op1 = null;
+        node.getNombre().apply(this);
+        op1 = (SaExpInt) this.returnValue;
+        int nombre = op1.getVal();
+        this.returnValue = new SaExpInt(nombre);
     }
 
     public void inAAppelfctExp6(AAppelfctExp6 node)
@@ -1280,12 +1280,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAAppelfctExp6(AAppelfctExp6 node)
     {
-        inAAppelfctExp6(node);
-        if(node.getAppelfct() != null)
-        {
-            node.getAppelfct().apply(this);
-        }
-        outAAppelfctExp6(node);
+        SaAppel op1 = null;
+        node.getAppelfct().apply(this);
+        op1 = (SaAppel) this.returnValue;
+        this.returnValue = new SaExpAppel(op1);
     }
 
     public void inAVarExp6(AVarExp6 node)
@@ -1301,12 +1299,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAVarExp6(AVarExp6 node)
     {
-        inAVarExp6(node);
-        if(node.getVar() != null)
-        {
-            node.getVar().apply(this);
-        }
-        outAVarExp6(node);
+        SaVar op1 = null;
+        node.getVar().apply(this);
+        op1 = (SaVar) this.returnValue;
+        this.returnValue = new SaExpVar(op1);
     }
 
     public void inAParenthesesExp6(AParenthesesExp6 node)
@@ -1319,23 +1315,13 @@ public class Sc2sa extends DepthFirstAdapter {
         defaultOut(node);
     }
 
-    @Override
+    @Override /* A faire */
     public void caseAParenthesesExp6(AParenthesesExp6 node)
     {
-        inAParenthesesExp6(node);
-        if(node.getParentheseOuvrante() != null)
-        {
-            node.getParentheseOuvrante().apply(this);
-        }
-        if(node.getExp() != null)
-        {
-            node.getExp().apply(this);
-        }
-        if(node.getParentheseFermante() != null)
-        {
-            node.getParentheseFermante().apply(this);
-        }
-        outAParenthesesExp6(node);
+        SaExp op1 = null;
+        node.getExp().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inALireExp6(ALireExp6 node)
@@ -1351,20 +1337,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseALireExp6(ALireExp6 node)
     {
-        inALireExp6(node);
-        if(node.getLire() != null)
-        {
-            node.getLire().apply(this);
-        }
-        if(node.getParentheseOuvrante() != null)
-        {
-            node.getParentheseOuvrante().apply(this);
-        }
-        if(node.getParentheseFermante() != null)
-        {
-            node.getParentheseFermante().apply(this);
-        }
-        outALireExp6(node);
+        SaExpLire op1 = null;
+        node.getLire().apply(this);
+        op1 = (SaExpLire) this.returnValue;
+        this.returnValue = new SaExpLire();
     }
 
     public void inAVartabVar(AVartabVar node)
