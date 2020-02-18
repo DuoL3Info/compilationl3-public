@@ -7,6 +7,10 @@ public class Sc2sa extends DepthFirstAdapter {
         private SaNode returnValue;
 
 
+    public SaNode getRoot(){
+        return returnValue;
+    }
+
     // exp3 = {plus} exp3 plus exp4
     public void caseAPlusExp3(APlusExp3 node) {
         SaExp op1 = null;
@@ -959,20 +963,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAOuExp(AOuExp node)
     {
-        inAOuExp(node);
-        if(node.getExp() != null)
-        {
-            node.getExp().apply(this);
-        }
-        if(node.getOu() != null)
-        {
-            node.getOu().apply(this);
-        }
-        if(node.getExp1() != null)
-        {
-            node.getExp1().apply(this);
-        }
-        outAOuExp(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp1().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpOr(op1, op2);
     }
 
     public void inAExp1Exp(AExp1Exp node)
@@ -988,12 +985,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp1Exp(AExp1Exp node)
     {
-        inAExp1Exp(node);
-        if(node.getExp1() != null)
-        {
-            node.getExp1().apply(this);
-        }
-        outAExp1Exp(node);
+        SaExp op1 = null;
+        node.getExp1().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inAEtExp1(AEtExp1 node)
@@ -1009,20 +1004,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAEtExp1(AEtExp1 node)
     {
-        inAEtExp1(node);
-        if(node.getExp1() != null)
-        {
-            node.getExp1().apply(this);
-        }
-        if(node.getEt() != null)
-        {
-            node.getEt().apply(this);
-        }
-        if(node.getExp2() != null)
-        {
-            node.getExp2().apply(this);
-        }
-        outAEtExp1(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp1().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp2().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpAnd(op1, op2);
     }
 
     public void inAExp2Exp1(AExp2Exp1 node)
@@ -1038,12 +1026,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp2Exp1(AExp2Exp1 node)
     {
-        inAExp2Exp1(node);
-        if(node.getExp2() != null)
-        {
-            node.getExp2().apply(this);
-        }
-        outAExp2Exp1(node);
+        SaExp op1 = null;
+        node.getExp2().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inAInfExp2(AInfExp2 node)
@@ -1059,20 +1045,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAInfExp2(AInfExp2 node)
     {
-        inAInfExp2(node);
-        if(node.getExp2() != null)
-        {
-            node.getExp2().apply(this);
-        }
-        if(node.getInferieur() != null)
-        {
-            node.getInferieur().apply(this);
-        }
-        if(node.getExp3() != null)
-        {
-            node.getExp3().apply(this);
-        }
-        outAInfExp2(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp2().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp3().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpInf(op1, op2);
     }
 
     public void inAEgalExp2(AEgalExp2 node)
@@ -1088,20 +1067,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAEgalExp2(AEgalExp2 node)
     {
-        inAEgalExp2(node);
-        if(node.getExp2() != null)
-        {
-            node.getExp2().apply(this);
-        }
-        if(node.getEgal() != null)
-        {
-            node.getEgal().apply(this);
-        }
-        if(node.getExp3() != null)
-        {
-            node.getExp3().apply(this);
-        }
-        outAEgalExp2(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp2().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp3().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpEqual(op1, op2);
     }
 
     public void inAExp3Exp2(AExp3Exp2 node)
@@ -1117,12 +1089,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp3Exp2(AExp3Exp2 node)
     {
-        inAExp3Exp2(node);
-        if(node.getExp3() != null)
-        {
-            node.getExp3().apply(this);
-        }
-        outAExp3Exp2(node);
+        SaExp op1 = null;
+        node.getExp3().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inAPlusExp3(APlusExp3 node)
@@ -1148,20 +1118,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAMoinsExp3(AMoinsExp3 node)
     {
-        inAMoinsExp3(node);
-        if(node.getExp3() != null)
-        {
-            node.getExp3().apply(this);
-        }
-        if(node.getMoins() != null)
-        {
-            node.getMoins().apply(this);
-        }
-        if(node.getExp4() != null)
-        {
-            node.getExp4().apply(this);
-        }
-        outAMoinsExp3(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp3().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp4().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpSub(op1, op2);
     }
 
     public void inAExp4Exp3(AExp4Exp3 node)
@@ -1177,12 +1140,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp4Exp3(AExp4Exp3 node)
     {
-        inAExp4Exp3(node);
-        if(node.getExp4() != null)
-        {
-            node.getExp4().apply(this);
-        }
-        outAExp4Exp3(node);
+        SaExp op1 = null;
+        node.getExp4().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inAFoisExp4(AFoisExp4 node)
@@ -1198,20 +1159,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAFoisExp4(AFoisExp4 node)
     {
-        inAFoisExp4(node);
-        if(node.getExp4() != null)
-        {
-            node.getExp4().apply(this);
-        }
-        if(node.getFois() != null)
-        {
-            node.getFois().apply(this);
-        }
-        if(node.getExp5() != null)
-        {
-            node.getExp5().apply(this);
-        }
-        outAFoisExp4(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp4().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp5().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpMult(op1, op2);
     }
 
     public void inADiviseExp4(ADiviseExp4 node)
@@ -1227,20 +1181,13 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseADiviseExp4(ADiviseExp4 node)
     {
-        inADiviseExp4(node);
-        if(node.getExp4() != null)
-        {
-            node.getExp4().apply(this);
-        }
-        if(node.getDivise() != null)
-        {
-            node.getDivise().apply(this);
-        }
-        if(node.getExp5() != null)
-        {
-            node.getExp5().apply(this);
-        }
-        outADiviseExp4(node);
+        SaExp op1 = null;
+        SaExp op2 = null;
+        node.getExp4().apply(this);
+        op1 = (SaExp) this.returnValue;
+        node.getExp5().apply(this);
+        op2 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpDiv(op1, op2);
     }
 
     public void inAExp5Exp4(AExp5Exp4 node)
@@ -1256,12 +1203,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp5Exp4(AExp5Exp4 node)
     {
-        inAExp5Exp4(node);
-        if(node.getExp5() != null)
-        {
-            node.getExp5().apply(this);
-        }
-        outAExp5Exp4(node);
+        SaExp op1 = null;
+        node.getExp5().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;
     }
 
     public void inANonExp5(ANonExp5 node)
@@ -1277,16 +1222,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseANonExp5(ANonExp5 node)
     {
-        inANonExp5(node);
-        if(node.getNon() != null)
-        {
-            node.getNon().apply(this);
-        }
-        if(node.getExp5() != null)
-        {
-            node.getExp5().apply(this);
-        }
-        outANonExp5(node);
+        SaExp op1 = null;
+        node.getExp5().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = new SaExpNot(op1);
     }
 
     public void inAExp6Exp5(AExp6Exp5 node)
@@ -1302,13 +1241,10 @@ public class Sc2sa extends DepthFirstAdapter {
     @Override
     public void caseAExp6Exp5(AExp6Exp5 node)
     {
-        inAExp6Exp5(node);
-        if(node.getExp6() != null)
-        {
-            node.getExp6().apply(this);
-        }
-        outAExp6Exp5(node);
-    }
+        SaExp op1 = null;
+        node.getExp6().apply(this);
+        op1 = (SaExp) this.returnValue;
+        this.returnValue = op1;    }
 
     public void inANombreExp6(ANombreExp6 node)
     {
