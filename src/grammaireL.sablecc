@@ -165,7 +165,7 @@ var =
 {varsimple} identif ;
 
 listeexp =
-{recursif} exp listeexpbis|
+{recursif} exp listeexpbis |
 {final} ;
 
 listeexpbis =
