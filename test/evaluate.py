@@ -110,7 +110,7 @@ def getNewEvaluationResult(name) :
 ################################################################################
 def evaluateSa(inputFiles) :
   evaluation = getNewEvaluationResult("Syntaxe Abstraite")
-  compareArbres = "compare_arbres/compare_arbres_xml"
+  compareArbres = "compare_arbres/compare_arbres_xml.exe"
   if not os.path.isfile(compareArbres) :
     print("Executable non trouvé : %s (il faut le compiler)"%compareArbres, file=sys.stderr)
     exit(1)

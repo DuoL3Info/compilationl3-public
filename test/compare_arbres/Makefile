@@ -4,7 +4,7 @@ FLEX = flex
 LIBS = -lm 
 CCFLAGS = -Wall -ggdb
 
-all: compare_arbres_xml
+apt-get install build-essentialall: compare_arbres_xml
 
 compare_arbres_xml: compare_arbres_xml.c analyseur_xml.o
 	$(CC) $(CCFLAGS) -o compare_arbres_xml compare_arbres_xml.c analyseur_xml.o
