@@ -4,18 +4,17 @@ import ts.*;
 public class Sa2ts extends SaDepthFirstVisitor<Void> {
 
     Ts tableGlobale = new Ts();
-    Ts tableLocale = new Ts();
+    Ts tableLocale;
+    int nb_param = 0;
 
     public Sa2ts(SaNode saRoot) {
+        visit((SaProg) saRoot);
     }
 
     public Ts getTableGlobale(){
         return tableGlobale;
     }
 
-    public Ts getTableLocale(){
-        return tableLocale;
-    }
 
 //3.1. Variables.
 //    Lors de la déclaration, vérifier que :
@@ -32,47 +31,53 @@ public class Sa2ts extends SaDepthFirstVisitor<Void> {
 //— Il n’y a pas de vérification de dépassement des bornes du tableau
 
 
-
-    //DECLARATION DE TABLEAUX (EX : int a[10])
+    //DECLARATION DE TABLEAUX
     @Override
     public Void visit(SaDecTab node) {
-        TsItemVar tsItem = node.tsItem;
-        //attributs utiles de tsItem
-
-        String identif = tsItem.getIdentif(); //le nom de la variable.
-        int taille = tsItem.getTaille(); //la taille mémoire occupée par la variable. Elle est égale à un pour des variables simples et, pour les tableaux, à la taille de ces derniers.
-        int adresse = tsItem.getAdresse(); //adresse relative de la variable. La première variable introduite dans la table a pour adresse 0, la seconde 0 + la taille de la première variable. . .
-        Ts portee = tsItem.portee; //la portée de la variable, représentée par la table à laquelle appartient la variable
-        boolean isParam = tsItem.isParam; //indique si la variable est une variable (locale ou globale) ou un paramètre.
-
-        if(portee.variables.containsKey(identif)) return null; //la table contient déjà cette variable ?
-
-
-        return super.visit(node);
+        defaultIn(node);
+        if(tableLocale != null) {
+            if (tableGlobale.variables.size() < nb_param)
+                tableLocale.addVar(node.getNom(), node.getTaille());
+            else
+                tableLocale.addParam(node.getNom());
+        }
+        else
+            tableGlobale.addVar(node.getNom() ,node.getTaille());
+        defaultOut(node);
+        return null;
     }
 
 
-    //DECLARATION D'UNE VARIABLE ( EX : int b )
+    //DECLARATION D'UNE VARIABLE
     @Override
     public Void visit(SaDecVar node) {
         defaultIn(node);
-        TsItemVar tsItem = node.tsItem;
-
-
+        if(tableLocale != null) {
+            if (tableLocale.variables.size() < nb_param)
+                tableLocale.addParam(node.getNom());
+            else
+                tableLocale.addVar(node.getNom(),1);
+        }
+        else
+            tableGlobale.addVar(node.getNom(),1);
         defaultOut(node);
-        return super.visit(node);
+        return null;
     }
 
     //DECLARATION D'UNE VARIABLE (SIMPLE ?)
     @Override
     public Void visit(SaVarSimple node) {
-        return super.visit(node);
+        defaultIn(node);
+        defaultOut(node);
+        return null;
     }
 
     //DECLARATION D'UNE VARIABLE (INDICE ?)
     @Override
     public Void visit(SaVarIndicee node) {
-        return super.visit(node);
+        defaultIn(node);
+        defaultOut(node);
+        return null;
     }
 
 
@@ -92,18 +97,26 @@ public class Sa2ts extends SaDepthFirstVisitor<Void> {
 
 
 
-    //DECLARATION DE FONCTION (EX : main(){ ... })
+    //DECLARATION DE FONCTION
     @Override
     public Void visit(SaDecFonc node) {
-        return super.visit(node);
+        defaultIn(node);
+        if(node.getParametres()==null)
+            nb_param = 0;
+        else
+            nb_param = node.getParametres().length();
+        tableLocale = new Ts();
+        tableGlobale.addFct(node.getNom(), nb_param, tableLocale, node);
+        defaultOut(node);
+        return null;
     }
 
 
-    //APPEL DE FONCTION (EX : main())
+    //APPEL DE FONCTION
     @Override
     public Void visit(SaAppel node) {
-        return super.visit(node);
+        defaultIn(node);
+        defaultOut(node);
+        return null;
     }
-
-
 }
