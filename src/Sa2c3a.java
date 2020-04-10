@@ -171,18 +171,23 @@ public class Sa2c3a extends SaDepthFirstVisitor<C3aOperand> {
 
     @Override
     public C3aOperand visit(SaExpInf node) {
-        C3aTemp c3aTemp = c3a.newTemp();
         C3aOperand op1 = node.getOp1().accept(this);    // opérande 1 (ou null)
-        C3aOperand result = node.getOp2().accept(this); // résultat ou destination du saut (ou NULL)
-        C3aInstAffect c3aInstAffect = new C3aInstAffect(op1, c3aTemp, "");
+        C3aOperand op2 = node.getOp2().accept(this); // résultat ou destination du saut (ou NULL)
+
+        //initilisation d'un temporaire à 1 (vrai)
+        C3aTemp c3aTemp = c3a.newTemp();
+        C3aInstAffect c3aInstAffect = new C3aInstAffect(new C3aConstant(1), c3aTemp, "");
         c3a.ajouteInst(c3aInstAffect);
 
-        C3aLabel result2 = c3a.newAutoLabel(); //result
-        C3aInstJumpIfLess c3aInstJumpIfLess = new C3aInstJumpIfLess(op1 , result , result2, "");
+        //si opérande 1 < opérande 2 on saute à la fin
+        C3aLabel c3aLabel = c3a.newAutoLabel(); //
+        C3aInstJumpIfLess c3aInstJumpIfLess = new C3aInstJumpIfLess(op1 , op2 , c3aLabel, "");
         c3a.ajouteInst(c3aInstJumpIfLess);
 
+        //sinon on met ce temporaire à 0
         C3aInstAffect c3aInstAffect2 = new C3aInstAffect(new C3aConstant(0), c3aTemp, "");
         c3a.ajouteInst(c3aInstAffect2);
+        c3a.addLabelToNextInst(c3aLabel);
         return c3aTemp;
     }
 
@@ -193,20 +198,22 @@ public class Sa2c3a extends SaDepthFirstVisitor<C3aOperand> {
 
     @Override
     public C3aOperand visit(SaExpAnd node) {
-        C3aTemp c3aTemp = c3a.newTemp();
-        C3aLabel c3aLabel = c3a.newAutoLabel();
         C3aOperand op1 = node.getOp1().accept(this);
         C3aOperand op2 = node.getOp2().accept(this);
 
-        c3a.ajouteInst(new C3aInstJumpIfEqual(op1,new C3aConstant(0), c3aLabel,""));
-        c3a.ajouteInst(new C3aInstJumpIfEqual(op1,new C3aConstant(0), c3aLabel,""));
-        c3a.ajouteInst(new C3aInstAffect(new C3aConstant(1), c3aTemp,""));
+        //initilisation d'un temporaire à 1 (vrai)
+        C3aTemp c3aTemp = c3a.newTemp();
+        C3aInstAffect c3aInstAffect = new C3aInstAffect(new C3aConstant(0), c3aTemp, "");
+        c3a.ajouteInst(c3aInstAffect);
 
-        C3aLabel c3aLabel2 = c3a.newAutoLabel();
-        c3a.ajouteInst(new C3aInstJump(c3aLabel2,""));
+        //si les deux opérandes sont égaux, GOTO c3aLabel sinon modification de la temporaire à 0 (faux)
+        C3aLabel c3aLabel = c3a.newAutoLabel();
+        C3aInstJumpIfEqual c3aInstJumpIfEqual1 = new C3aInstJumpIfEqual(op1, op2, c3aLabel,"");
+        c3a.ajouteInst(c3aInstJumpIfEqual1);
+
+        C3aInstAffect c3aInstAffect2 = new C3aInstAffect(new C3aConstant(0), c3aTemp, "");
+        c3a.ajouteInst(c3aInstAffect2);
         c3a.addLabelToNextInst(c3aLabel);
-        c3a.ajouteInst(new C3aInstAffect(new C3aConstant(0), c3aTemp,""));
-        c3a.addLabelToNextInst(c3aLabel2);
         return c3aTemp;
     }
 
